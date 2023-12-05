@@ -1,3 +1,9 @@
+include .envs/.postgres
+include .envs/.mlflow-common 
+include .envs/.mlflow-dev 
+export
+
+
 # Make all targets .PHONY
 .PHONY: $(shell sed -n -e '/^$$/ { n ; /^[^ .\#][^ ]*:/ { s/:.*$$// ; p ; } ; }' $(MAKEFILE_LIST))
 
@@ -14,8 +20,20 @@ else
 	DOCKER_COMPOSE_COMMAND = docker-compose
 endif
 
-SERVICE_NAME = app
-CONTAINER_NAME = project-model-container
+PROD_SERVICE_NAME = app-prod
+PROD_CONTAINER_NAME = project-model-prod-container
+
+ifeq (, $(shell which nvidia-smi)) # check if gpu is available or not
+	PROFILE = ci 
+	CONTAINER_NAME = src-model-ci-container
+	SERVICE_NAME = app-ci
+else
+	PROFILE = dev
+	CONTAINER_NAME = src-model-dev-container
+	SERVICE_NAME = app-dev 
+endif
+
+
 
 DIRS_TO_VALIDATE = src
 DOCKER_COMPOSE_RUN = $(DOCKER_COMPOSE_COMMAND) run --rm $(SERVICE_NAME)
@@ -24,6 +42,12 @@ DOCKER_COMPOSE_EXEC = $(DOCKER_COMPOSE_COMMAND) exec $(SERVICE_NAME)
 # exec: This is a Docker Compose command that is used to execute a command in a running container.
 # $(SERVICE_NAME): This is another variable reference, and it likely holds the name of the service in which you want to execute a command.
 # to export our environment variables declared above to be read by docker compe file
+
+DOCKER_COMPOSE_RUN_PROD = $(DOCKER_COMPOSE_COMMAND) run --rm $(PROD_SERVICE_NAME)
+
+DOCKER_COMPOSE_EXEC_PROD = $(DOCKER_COMPOSE_COMMAND) exec $(PROD_SERVICE_NAME)
+
+
 export
 
 # Returns true if the stem is a non-empty environment variable, or else raises an error.

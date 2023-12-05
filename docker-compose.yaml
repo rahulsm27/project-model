@@ -4,37 +4,79 @@
 version: '3.11'
 #sudo docker-compose build
 
-services:
-  app:
+volumes:
+  postgresql-mlflow-data:
+  mlflow-artifact-store:
+
+x-app-template: &APP_TEMPLATE  # variable should start with x
     user: "${USER_ID:-1000}"   # environment variable uid
     hostname: "${HOST:-Rahul}" # hostname of the container
     image: project-model   # image to be called
-    container_name : project-model-container
     build:
       context : .
       dockerfile : ./docker/Dockerfile # where is the docker file
-      # below args to be pased in docerfile check docer file
       args:
         USER_NAME : "${USER_NAME:-rahulsm.27}"
         USER_ID : "${USER_ID:-1000}"
+    env_file:
+      - .envs/.app
+      - .envs/.mlflow-common
+      - .envs/.mlflow-dev
 
-   # env_file:
-    #  - .envs/.app
-
-    volumes : # during project building we are going to mount our project directory to docker container so that changes done in project is avialable in docker
+    volumes : 
       - ./:/app/
       - ~/.config/gcloud:/home/${USER_NAME}/.config/gcloud
-  # gclodu credentials mapped to docker container so that automatically authenticated in container
-    ports :
-      - 8080:8080
-
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count : all 
-              capabilities : [gpu]
-
     ipc : host
     init : true
+
+
+services:
+  mlflow-db:
+    container_name : mlflow-backend-store
+    image: postres:14
+    env_file:
+      - .envs/.mlflow-common
+      - .envs/.mlflow-dev
+      - .envs/.postgres 
+    volumes:
+      -postgresql-mlflow-data:/var/lib/postgresql/data
+    ports:
+      -5433:5432
+  
+  
+  app-dev: # for local processing
+    <<: *APP_TEMPLATE
+    container_name : project-model-dev-container
+    ports :
+      - 8080:8080
+      - ${LOCAL_DEV_MLFLOW_SERVER_PORT}:${LOCAL_DEV_MLFLOW_SERVER_PORT}
+
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count : all 
+    #           capabilities : [gpu]
+
+  app-prod: # for distributed processing on cloud
+    <<: *APP_TEMPLATE
+    container_name : project-model-prod-container
+    
+      - 8080:8080
+      - ${LOCAL_DEV_MLFLOW_SERVER_PORT}:${LOCAL_DEV_MLFLOW_SERVER_PORT}
+    env_file:
+      - .envs/.mlflow-common
+      - .envs/.mlflow-pord
+    ports :
+      - ${PROD_MLFLOW_SERVER_PORT}:${PROD_MLFLOW_SERVER_PORT}
+    profiles:
+      - prod
+    
+  app-ci:
+    <<: *APP_TEMPLATE
+    container_name : project-model-ci-container
+    ports:
+      - ${LOCAL_DEV_MLFLOW_SERVER_PORT}:${LOCAL_DEV_MLFLOW_SERVER_PORT}
+    profiles:
+      - ci
