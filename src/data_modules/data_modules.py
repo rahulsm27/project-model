@@ -6,7 +6,7 @@ from torch.utils.data import BatchSampler, DataLoader, Dataset, Sampler, default
 from transformers import BatchEncoding
 
 from src.data_modules.datasets import TextClassificationDataset
-# from src.models.transformations import HuggingFaceTokenizationTransformation, Transformation
+from src.data_modules.transformations import HuggingFaceTokenizationTransformation, Transformation
 
 
 class DataModule(LightningDataModule):
@@ -60,7 +60,7 @@ class TextClassificationDataModule(DataModule):
         train_df_path: str,
         dev_df_path: str,
         test_df_path: str,
-        transformation: Any, #HuggingFaceTokenizationTransformation,
+        transformation: HuggingFaceTokenizationTransformation,
         text_column_name: str,
         label_column_name: str,
         batch_size: int,

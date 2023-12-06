@@ -69,6 +69,11 @@ def copy_dir(source_dir: str, target_dir: str) -> None:
 
 
 def translate_gcs_dir_to_local(path: str) -> str:
+    """
+    checks if given path starts with gs
+    if yes it copies from gs to local path
+    and return local path
+    """
     if path.startswith(GCS_PREFIX):
         path = path.rstrip("/")
         local_path = os.path.join(TMP_FILE_PATH, os.path.split(path)[-1])
