@@ -1,0 +1,19 @@
+infrastructure:
+  gcp_training_cluster : something
+  mlflow : something
+
+tasks;
+  text_classification:
+    data_module
+    lightning_module:
+      model 
+        backbone
+        head
+      optimizer
+      scheduler
+      loss
+  model_evaluationtask
+    data_modleu
+    lightning_module:
+      model 
+  mlflow
