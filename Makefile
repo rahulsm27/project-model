@@ -56,6 +56,9 @@ export
 guard-%:
 	@#$(or ${$*}, $(error $* is not set))
 
+generate-final-config-local: up
+	@$(DOCKER_COMPOSE_EXEC) python src/generate_final_config.py ${OVERRIDES}
+	#@ runs in current directory
 ## Call entrypoint
 local-run-tasks: up
 	$(DOCKER_COMPOSE_EXEC) python ./src/run_tasks.py
