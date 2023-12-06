@@ -23,16 +23,18 @@ endif
 PROD_SERVICE_NAME = app-prod
 PROD_CONTAINER_NAME = project-model-prod-container
 
-ifeq (, $(shell which nvidia-smi)) # check if gpu is available or not
-	PROFILE = ci 
-	CONTAINER_NAME = src-model-ci-container
-	SERVICE_NAME = app-ci
-else
-	PROFILE = dev
-	CONTAINER_NAME = src-model-dev-container
-	SERVICE_NAME = app-dev 
-endif
-
+# ifeq (, $(shell which nvidia-smi)) # check if gpu is available or not
+# 	PROFILE = ci 
+# 	CONTAINER_NAME = src-model-ci-container
+# 	SERVICE_NAME = app-ci
+# else
+# 	PROFILE = dev
+# 	CONTAINER_NAME = src-model-dev-container
+# 	SERVICE_NAME = app-dev 
+# endif
+PROFILE = dev
+CONTAINER_NAME = project-model-dev-container
+SERVICE_NAME = app-dev 
 
 
 DIRS_TO_VALIDATE = src
@@ -111,8 +113,12 @@ lock-dependencies: build-for-dependencies
 	$(DOCKER_COMPOSE_RUN) bash -c "if [ -e /home/${USER_NAME}/poetry.lock.build ]; then cp /home/${USER_NAME}/poetry.lock.build ./poetry.lock; else poetry lock; fi"
 
 ## Starts docker containers using "docker-compose up -d"
+ # check if the container name is same as current running. if not down it..requrired if we want to switch between dev and prod services
 up:
-	$(DOCKER_COMPOSE_COMMAND) up -d
+ifeq (, $(shell docker ps -a | grep $(CONTAINER_NAME)))
+	@make down
+endif
+	$(DOCKER_COMPOSE_COMMAND) --profile $(PROFILE) up -d --remove-orphans
 
 ## docker-compose down
 down:

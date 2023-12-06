@@ -19,12 +19,13 @@ x-app-template: &APP_TEMPLATE  # variable should start with x
         USER_NAME : "${USER_NAME:-rahulsm.27}"
         USER_ID : "${USER_ID:-1000}"
     env_file:
-      - .envs/.app
+      - .envs/.postgres
       - .envs/.mlflow-common
       - .envs/.mlflow-dev
-
+      
     volumes : 
       - ./:/app/
+      - mlflow-artifact-store:/mlflow-artifact-store
       - ~/.config/gcloud:/home/${USER_NAME}/.config/gcloud
     ipc : host
     init : true
@@ -33,24 +34,27 @@ x-app-template: &APP_TEMPLATE  # variable should start with x
 services:
   mlflow-db:
     container_name : mlflow-backend-store
-    image: postres:14
+    image: postgres:14
     env_file:
       - .envs/.mlflow-common
       - .envs/.mlflow-dev
       - .envs/.postgres 
     volumes:
-      -postgresql-mlflow-data:/var/lib/postgresql/data
+      - postgresql-mlflow-data:/var/lib/postgresql/data
     ports:
-      -5433:5432
-  
-  
+      - 5433:5432
+    profiles:
+      - dev
+  #proflies helps to select services to run like dev related or prod related
   app-dev: # for local processing
     <<: *APP_TEMPLATE
     container_name : project-model-dev-container
     ports :
       - 8080:8080
+      
       - ${LOCAL_DEV_MLFLOW_SERVER_PORT}:${LOCAL_DEV_MLFLOW_SERVER_PORT}
-
+    profiles:
+      - dev
     # deploy:
     #   resources:
     #     reservations:
@@ -67,7 +71,7 @@ services:
       - ${LOCAL_DEV_MLFLOW_SERVER_PORT}:${LOCAL_DEV_MLFLOW_SERVER_PORT}
     env_file:
       - .envs/.mlflow-common
-      - .envs/.mlflow-pord
+      - .envs/.mlflow-prod
     ports :
       - ${PROD_MLFLOW_SERVER_PORT}:${PROD_MLFLOW_SERVER_PORT}
     profiles:
