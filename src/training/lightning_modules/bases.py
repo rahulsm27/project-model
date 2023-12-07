@@ -5,7 +5,7 @@ from torch import Tensor
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
 
-from src.training.loss_function import LossFunction
+from src.training.loss_functions import LossFunction
 from src.training.schedulers import LightningScheduler
 
 from src.models.models import Model
@@ -51,32 +51,4 @@ class TrainingLightningModule(LightningModule):
     def validation_step(self,batch: Any, batch_idx: int)-> Tensor:
         ...
     
-class BinaryTextClassificationLightningModule(TrainingLightningModule):
-
-    def __init__(
-            self,
-            model : Model,
-            loss : LossFunction,
-            optimizer : PartialOptimizerType,
-            scheduler : Optional[LightningScheduler] = None
-    ) -> None:
-        super().__init__(model=model,loss=loss,optimizer =optimizer,scheduler=scheduler)
-
-        self.model = model
-        self.loss = loss
-        self.partial_optimzier = optimizer
-        self.scheduler = scheduler
-
-        self.logging_logger = get_logger(self.__class__.__name__)
-
-   
-
-
-    @abstractmethod
-    def training_step(self,batch: Any, batch_idx: int)-> Tensor:
-        ...
-
-    @abstractmethod
-    def validation_step(self,batch: Any, batch_idx: int)-> Tensor:
-        ...
     
