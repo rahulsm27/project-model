@@ -1,10 +1,19 @@
 
 from torch import nn
 from transformers import AutoConfig, AutoModel , BatchEncoding
-from transformers.model_outputs import BaseModelOutput
+from transformers.modeling_outputs import BaseModelOutputWithPooling
 from src.utils.io_utils import translate_gcs_dir_to_local
+from src.data_modules.transformations import Transformation
+
+
 class Backbone(nn.Module):
-    pass
+    def __init__(self, transformation : Transformation) -> None:
+        super().__init__()
+        self.transformation = transformation
+    
+    def get_transfomration(self)-> Transformation:
+        return self.transformation
+
 
 
 class HuggingFaceBackone(Backbone):
@@ -23,6 +32,6 @@ class HuggingFaceBackone(Backbone):
         return AutoModel.from_config(config)
         
 
-    def forward(self, encodings : BatchEncoding) -> BaseModelOutput:
-        output : BaseModelOutput = self.backbone(**encodings)
+    def forward(self, encodings : BatchEncoding) -> BaseModelOutputWithPooling:
+        output : BaseModelOutputWithPooling = self.backbone(**encodings)
         return output

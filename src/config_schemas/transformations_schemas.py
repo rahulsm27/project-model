@@ -5,8 +5,8 @@ from omegaconf import MISSING, SI
 
 
 @dataclass
-class Transformation:
-    _target_"str = Missing
+class TransformationConfig:
+    _target_:str = MISSING
 
 @dataclass
 class HuggingFaceTokenizationTransformationConfig:

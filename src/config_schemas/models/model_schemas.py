@@ -18,7 +18,7 @@ class ModelConfig():
 
 @dataclass
 class BinaryTextClassificationModelConfig(ModelConfig):
-    _target_: str = "cybulde.models.models.BinaryTextClassificationModel"
+    _target_: str = "src.models.models.BinaryTextClassificationModel"
     backbone: backbone_schemas.BackboneConfig = MISSING
     adapter: Optional[adapter_schemas.AdapterConfig] = None
     head: head_schemas.HeadConfig = MISSING

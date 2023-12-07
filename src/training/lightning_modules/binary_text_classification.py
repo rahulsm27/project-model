@@ -9,7 +9,7 @@ from torchmetrics.classification import BinaryAccuracy, BinaryConfusionMatrix, B
 from transformers import BatchEncoding
 
 from src.models.models import Model
-#from src.models.transformations import Transformation
+from src.data_modules.transformations import Transformation
 from src.training.lightning_modules.bases import (
     ModelStateDictExportingTrainingLightningModule,
     PartialOptimizerType,
@@ -109,8 +109,8 @@ class BinaryTextClassificationTrainingLightningModule(ModelStateDictExportingTra
 
         self.validation_step_outputs = defaultdict(list)
 
-    # def get_transformation(self) -> Transformation:
-    #     return self.model.get_transformation()
+    def get_transformation(self) -> Transformation:
+        return self.model.get_transformation()
 
     def export_model_state_dict(self, checkpoint_path: str) -> str:
         return self.common_export_model_state_dict(checkpoint_path)

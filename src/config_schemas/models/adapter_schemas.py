@@ -12,7 +12,7 @@ class AdapterConfig:
 
 @dataclass
 class MLPWithPoolingConfig(AdapterConfig):
-    _target_: str = "cybulde.models.adapters.MLPWithPooling"
+    _target_: str = "src.models.adapters.MLPWithPooling"
     output_feature_sizes: list[int] = MISSING
     biases: Optional[list[bool]] = None
     activation_fns: Optional[list[Optional[str]]] = None

@@ -16,7 +16,7 @@ class HeadConfig():
 
 @dataclass
 class SigmoidHeadConfig(HeadConfig):
-    _target_: str = "cybulde.models.heads.SigmoidHead"
+    _target_: str = "src.models.heads.SigmoidHead"
     in_features: int = MISSING
     out_features: int = MISSING
 
