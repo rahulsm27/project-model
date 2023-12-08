@@ -4,7 +4,7 @@ from typing import Optional
 from hydra.core.config_store import ConfigStore
 from omegaconf import MISSING
 
-#from cybulde.utils.mixins import LoggableParamsMixin
+from src.utils.mixins import LoggableParamsMixin
 
 
 @dataclass
@@ -12,8 +12,8 @@ class SchedulerConfig():
     _target_: str = MISSING
     _partial_: bool = True
 
-    # def loggable_params(self) -> list[str]:
-    #     return ["_target_"]
+    def loggable_params(self) -> list[str]:
+         return ["_target_"]
 
 # Note first two classes define scheduler config. which is pased as input to lightning scheduler. THis is combined in last class
 

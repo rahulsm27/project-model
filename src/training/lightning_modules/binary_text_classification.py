@@ -55,7 +55,7 @@ class BinaryTextClassificationTrainingLightningModule(TrainingLightningModule):
         logits = self(texts)
 
         #self.pos_weight = self.pos_weight.to(self.device)
-        loss = self.loss(logits, labels), #pos_weight=self.pos_weight)
+        loss = self.loss(logits, labels) #pos_weight=self.pos_weight)
         self.log("loss", loss, sync_dist=True)
 
         self.training_accuracy(logits, labels)

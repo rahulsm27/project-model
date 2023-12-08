@@ -5,15 +5,15 @@ from hydra.core.config_store import ConfigStore
 from omegaconf import MISSING
 
 from src.config_schemas.models import adapter_schemas, backbone_schemas, head_schemas
-#from cybulde.utils.mixins import LoggableParamsMixin
+from src.utils.mixins import LoggableParamsMixin
 
 
 @dataclass
-class ModelConfig():
+class ModelConfig(LoggableParamsMixin):
     _target_: str = MISSING
 
-    # def loggable_params(self) -> list[str]:
-    #     return ["_target_"]
+    def loggable_params(self) -> list[str]:
+        return ["_target_"]
 
 
 @dataclass
