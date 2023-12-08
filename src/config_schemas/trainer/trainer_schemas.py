@@ -55,7 +55,8 @@ class TrainerConfig():
 @dataclass
 class GPUDev(TrainerConfig):
     max_epochs: int = 3
-    accelerator: str = "gpu"
+    accelerator: str = "auto" #gpu
+    precision: str = "bf16-mixed"
     log_every_n_steps: int = 1
     limit_train_batches: float = 0.01
     limit_val_batches: float = 0.01

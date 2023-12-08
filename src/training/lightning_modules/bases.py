@@ -28,7 +28,7 @@ class TrainingLightningModule(LightningModule):
 
         self.model = model
         self.loss = loss
-        self.partial_optimzier = optimizer
+        self.partial_optimizer = optimizer
         self.scheduler = scheduler
 
         self.logging_logger = get_logger(self.__class__.__name__)

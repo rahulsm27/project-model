@@ -61,7 +61,7 @@ generate_final_config_local: up
 	#@ runs in current directory
 ## Call entrypoint
 local-run-tasks: generate_final_config_local
-	$(DOCKER_COMPOSE_EXEC) python ./src/run_tasks.py
+	$(DOCKER_COMPOSE_EXEC) torchrun ./src/run_tasks.py
 
 ## Starts jupyter lab
 notebook: up

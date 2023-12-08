@@ -9,9 +9,9 @@ from omegaconf import OmegaConf
 from hydra.utils import instantiate
 # custom decorater created
 @get_config(config_path="../configs/automatically_generated", config_name="config", to_object=False ,return_dict_config=True)
-def entrypoint(config: Config) -> None:
-    print(OmegaConf.to_yaml(config,resolve=True))
-    exit()
+def run_tasks(config: Config) -> None:
+   # print(OmegaConf.to_yaml(config,resolve=True))
+   # exit()
     logger = get_logger(__file__)
     assert config.infrastructure.mlflow.run_id is not None, "Run id has to be set for running tasks"
 
@@ -20,7 +20,7 @@ def entrypoint(config: Config) -> None:
        torch.cuda.set_device(f"cuda:{get_local_rank()}")
        backend = "nccl" # for gpu
 
-    torch.distributed.init_process_group(backendn=backend)
+    torch.distributed.init_process_group(backend=backend)
 
     seed_everything(seed=config.seed, workers =True) #seed everthing pytorch lightning module, model etc..so that every run produces same result
 
@@ -30,4 +30,4 @@ def entrypoint(config: Config) -> None:
         task.run(config=config, task_config=task_config)
 
 if __name__ == "__main__":
-    entrypoint()  # type: ignore
+    run_tasks()  # type: ignore

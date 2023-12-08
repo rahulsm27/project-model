@@ -11,7 +11,7 @@ from transformers import BatchEncoding
 from src.models.models import Model
 from src.data_modules.transformations import Transformation
 from src.training.lightning_modules.bases import (
-    ModelStateDictExportingTrainingLightningModule,
+    TrainingLightningModule,
     PartialOptimizerType,
 )
 from src.training.loss_functions import LossFunction
@@ -19,7 +19,7 @@ from src.training.schedulers import LightningScheduler
 from src.utils.torch_utils import plot_confusion_matrix
 
 
-class BinaryTextClassificationTrainingLightningModule(ModelStateDictExportingTrainingLightningModule):
+class BinaryTextClassificationTrainingLightningModule(TrainingLightningModule):
     def __init__(
         self,
         model: Model,
@@ -41,10 +41,10 @@ class BinaryTextClassificationTrainingLightningModule(ModelStateDictExportingTra
         self.train_step_outputs: dict[str, list[Tensor]] = defaultdict(list)
         self.validation_step_outputs: dict[str, list[Tensor]] = defaultdict(list)
 
-        self.pos_weight: Optional[Tensor] = None
+     #   self.pos_weight: Optional[Tensor] = None
 
-    def set_pos_weight(self, pos_weight: Tensor) -> None:
-        self.pos_weight = pos_weight
+  #  def set_pos_weight(self, pos_weight: Tensor) -> None:
+  #      self.pos_weight = pos_weight
 
     def forward(self, texts: BatchEncoding) -> Tensor:
         output: Tensor = self.model(texts)
@@ -54,8 +54,8 @@ class BinaryTextClassificationTrainingLightningModule(ModelStateDictExportingTra
         texts, labels = batch
         logits = self(texts)
 
-        self.pos_weight = self.pos_weight.to(self.device)
-        loss = self.loss(logits, labels, pos_weight=self.pos_weight)
+        #self.pos_weight = self.pos_weight.to(self.device)
+        loss = self.loss(logits, labels), #pos_weight=self.pos_weight)
         self.log("loss", loss, sync_dist=True)
 
         self.training_accuracy(logits, labels)
@@ -79,7 +79,7 @@ class BinaryTextClassificationTrainingLightningModule(ModelStateDictExportingTra
         figure = plot_confusion_matrix(confusion_matrix, ["0", "1"])
         mlflow.log_figure(figure, "training_confusion_matrix.png")
 
-        self.train_step_outputs = defaultdict(list)
+        self.train_step_outputs = defaultdict(list) # clear values
 
     def validation_step(self, batch: tuple[BatchEncoding, Tensor], batch_idx: int) -> dict[str, Tensor]:  # type: ignore
         texts, labels = batch
@@ -107,7 +107,7 @@ class BinaryTextClassificationTrainingLightningModule(ModelStateDictExportingTra
         figure = plot_confusion_matrix(confusion_matrix, ["0", "1"])
         mlflow.log_figure(figure, "validation_confusion_matrix.png")
 
-        self.validation_step_outputs = defaultdict(list)
+        self.validation_step_outputs = defaultdict(list)# clear values
 
     def get_transformation(self) -> Transformation:
         return self.model.get_transformation()
