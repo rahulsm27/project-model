@@ -1,0 +1,7 @@
+_target_: src.models.backbones.HuggingFaceBackbone
+transformation:
+  _target_: src.data_modules.transformations.HuggingFaceTokenizationTransformation
+  pretrained_tokenizer_name_or_path: gs://cyberbully_r/data/processed/default_run/trained_tokenizer
+  max_sequence_length: 100
+pretrained_model_name_or_path: prajjwal1/bert-tiny
+pretrained: false
