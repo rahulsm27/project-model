@@ -26,16 +26,16 @@ class BinaryTextClassificationTrainingLightningModuleConfig(TrainingLightningMod
     )
 
 
-# @dataclass
-# class CybuldeBinaryTextClassificationTrainingLightningModuleConfig(
-#     BinaryTextClassificationTrainingLightningModuleConfig
-# ):
-#     model: ModelConfig = BertTinyBinaryTextClassificationModelConfig()
-#     loss: loss_schemas.LossFunctionConfig = loss_schemas.BCEWithLogitsLossConfig()
-#     optimizer: optimizer_schemas.OptimizerConfig = optimizer_schemas.AdamWOptimizerConfig()
-#     scheduler: Optional[
-#         scheduler_schemas.LightningSchedulerConfig
-#     ] = scheduler_schemas.ReduceLROnPlateauLightningSchedulerConfig()
+@dataclass
+class DefaultBinaryTextClassificationTrainingLightningModuleConfig(
+    BinaryTextClassificationTrainingLightningModuleConfig
+):
+    model: ModelConfig = BertTinyBinaryTextClassificationModelConfig()
+    loss: loss_schemas.LossFunctionConfig = loss_schemas.BCEWithLogitsLossConfig()
+    optimizer: optimizer_schemas.OptimizerConfig = optimizer_schemas.AdamWOptimizerConfig()
+    scheduler: Optional[
+        scheduler_schemas.LightningSchedulerConfig
+    ] = scheduler_schemas.ReduceLROnPlateauLightningSchedulerConfig()
 
 
 def setup_config() -> None:
@@ -44,4 +44,10 @@ def setup_config() -> None:
         name="binary_text_classification_training_lightning_module_schema",
         group="tasks/lightning_module",
         node=BinaryTextClassificationTrainingLightningModuleConfig,
+    )
+
+    cs.store(
+        name="lm_test",
+   #     group="tasks/lightning_module",
+        node=DefaultBinaryTextClassificationTrainingLightningModuleConfig
     )

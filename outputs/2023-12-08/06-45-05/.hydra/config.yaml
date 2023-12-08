@@ -1,0 +1,62 @@
+_target_: src.training.lightning_modules.binary_text_classification.BinaryTextClassificationTrainingLightningModule
+model:
+  _target_: src.models.models.BinaryTextClassificationModel
+  backbone:
+    _target_: src.models.backbones.HuggingFaceBackbone
+    transformation:
+      _target_: src.data_modules.transformations.HuggingFaceTokenizationTransformation
+      pretrained_tokenizer_name_or_path: gs://cyberbully_r/data/processed/default_run/trained_tokenizer
+      max_sequence_length: 100
+    pretrained_model_name_or_path: prajjwal1/bert-tiny
+    pretrained: false
+  adapter:
+    _target_: src.models.adapters.MLPWithPooling
+    output_feature_sizes:
+    - -1
+    biases: null
+    activation_fns: null
+    dropout_drop_probs: null
+    batch_norms: null
+    order: LABDN
+    standardize_input: true
+    pooling_method: null
+    output_attribute_to_use: pooler_output
+  head:
+    _target_: src.models.heads.SigmoidHead
+    in_features: 128
+    out_features: 1
+loss:
+  _target_: src.training.loss_functions.BCEWithLogitsLoss
+  reduction: mean
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: true
+  lr: 5.0e-05
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+  weight_decay: 0.001
+  amsgrad: false
+  foreach: null
+  maximize: false
+  capturable: false
+scheduler:
+  _target_: src.training.schedulers.CommonLightningScheduler
+  scheduler:
+    _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+    _partial_: true
+    mode: max
+    factor: 0.1
+    patience: 5
+    threshold: 0.0001
+    threshold_mode: rel
+    cooldown: 0
+    min_lr: 0.0
+    eps: 1.0e-08
+    verbose: false
+  interval: epoch
+  frequency: 1
+  monitor: validation_f1_score
+  strict: true
+  name: null

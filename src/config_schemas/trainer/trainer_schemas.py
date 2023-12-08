@@ -3,7 +3,7 @@ from typing import Optional
 
 from hydra.core.config_store import ConfigStore
 
-from src.config_schemas.trainer import callbacks_schemas, logger_schemas
+from src.config_schemas.trainer import callbacks_schemas,logger_schemas
 #from src.utils.mixins import LoggableParamsMixin
 
 
