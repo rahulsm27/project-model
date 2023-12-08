@@ -56,11 +56,11 @@ export
 guard-%:
 	@#$(or ${$*}, $(error $* is not set))
 
-generate-final-config-local: up
+generate_final_config_local: up
 	@$(DOCKER_COMPOSE_EXEC) python src/generate_final_config.py ${OVERRIDES}
 	#@ runs in current directory
 ## Call entrypoint
-local-run-tasks: up
+local-run-tasks: generate_final_config_local
 	$(DOCKER_COMPOSE_EXEC) python ./src/run_tasks.py
 
 ## Starts jupyter lab
@@ -72,7 +72,7 @@ sort: up
 	$(DOCKER_COMPOSE_EXEC) isort --atomic $(DIRS_TO_VALIDATE)
 
 ## Check sorting using isort
-sort-check: up
+sort_check: up
 	$(DOCKER_COMPOSE_EXEC) isort --check-only --atomic $(DIRS_TO_VALIDATE)
 
 ## Format code using black

@@ -6,7 +6,7 @@ from omegaconf import MISSING, SI
 from src.config_schemas import data_module_schemas
 from src.config_schemas.base_schemas import TaskConfig
 from src.config_schemas.trainer import trainer_schemas
-from src.config_schemas.training import lightning_module_schemas
+from src.config_schemas.training import training_lightning_module_schemas
 
 
 @dataclass
@@ -32,15 +32,15 @@ class DefaultCommonTrainingTaskConfig(CommonTrainingTaskConfig):
     data_module: data_module_schemas.DataModuleConfig = (
         data_module_schemas.ScrappedDataTextClassificationDataModuleConfig()
     )
-    lightning_module: lightning_module_schemas.TrainingLightningModuleConfig = (
-        lightning_module_schemas.DefaultBinaryTextClassificationTrainingLightningModuleConfig()
+    lightning_module: training_lightning_module_schemas.TrainingLightningModuleConfig = (
+        training_lightning_module_schemas.DefaultBinaryTextClassificationTrainingLightningModuleConfig()
     )
     trainer: trainer_schemas.TrainerConfig = trainer_schemas.GPUDev()
 
 
 def setup_config() -> None:
     data_module_schemas.setup_config()
-    lightning_module_schemas.setup_config()
+    training_lightning_module_schemas.setup_config()
     trainer_schemas.setup_config()
 
     cs = ConfigStore.instance()

@@ -6,7 +6,7 @@ from omegaconf import MISSING
 
 @dataclass
 class LightningModuleConfig:
-    _tareget_: str = MISSING
+    _target_: str = MISSING
 
 @dataclass
 class TaskConfig:

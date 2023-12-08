@@ -4,14 +4,14 @@ from typing import Optional
 from hydra.core.config_store import ConfigStore
 from omegaconf import MISSING
 
-#from src.config_schemas.base_schemas import LightningModuleConfig
+from src.config_schemas.base_schemas import LightningModuleConfig
 from src.config_schemas.models.model_schemas import BertTinyBinaryTextClassificationModelConfig, ModelConfig
 from src.config_schemas.training import loss_schemas, optimizer_schemas, scheduler_schemas
 #from src.utils.mixins import LoggableParamsMixin
 
 
 @dataclass
-class TrainingLightningModuleConfig:
+class TrainingLightningModuleConfig(LightningModuleConfig):
     _target_: str = MISSING
     model: ModelConfig = MISSING
     loss: loss_schemas.LossFunctionConfig = MISSING

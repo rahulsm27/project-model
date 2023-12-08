@@ -8,7 +8,7 @@ import mlflow
 if TYPE_CHECKING:
     from src.config_schemas.config_schema import Config
 # Yes, you are right, this is a little bit confusing. This is because of the way Hydra works. We are using their decorator in our decorator to read the config file. And their decorator works with relative path to where it was defined. Because we are using Hydra's decorator under utils module, the relative path to the config's directory is ../configs
-@get_config(config_path="../configs", config_name="config")
+@get_config(config_path="../configs", config_name="config" ,to_object = False, return_dict_config=True)
 def generate_final_config(config : "Config") -> None:
    # print(OmegaConf.to_yaml(config))
     with activate_mlflow(config.infrastructure.mlflow.experiment_name,run_id = config.infrastructure.mlflow.run_id,run_name=config.infrastructure.mlflow.run_name) as run:
