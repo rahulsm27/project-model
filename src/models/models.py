@@ -17,20 +17,20 @@ class BinaryTextClassificationModel(Model):
     def __init__(self, backbone:Backbone, head: Head, adapter: Optional[Adapter]) -> None:
         super().__init__()
 
-        self.backone = backbone
+        self.backbone = backbone
         self.adapter = adapter
         self.head = head
 
     def forward(self, encodings : BatchEncoding) -> Tensor:
 
-        output = self.backone(encodings)
+        output = self.backbone(encodings)
         if self.adapter is not None:
             output = self.adapter(output)
         output =self.head(output)
         return output
     
     def get_trasformation(self) -> Transformation:
-        return self.backone.get_transfomration()
+        return self.backbone.get_transfomration()
 
     
 

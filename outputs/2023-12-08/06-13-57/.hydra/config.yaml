@@ -1,0 +1,4 @@
+_target_: src.models.models.BinaryTextClassificationModel
+backbone: ???
+adapter: null
+head: ???

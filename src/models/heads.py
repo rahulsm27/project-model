@@ -1,7 +1,7 @@
 from torch import nn , Tensor
 
 
-class Head(nn.module):
+class Head(nn.Module):
     pass 
 
 class SoftmaxHead(Head):
