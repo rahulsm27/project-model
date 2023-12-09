@@ -5,7 +5,7 @@ from src.models.backbones import Backbone
 from src.models.adapters import Adapter
 from src.models.heads import Head
 
-from src.data_modules.transformations import Transformation
+from src.models.transformations import Transformation
 from transformers import BatchEncoding
 
 class Model(nn.Module):

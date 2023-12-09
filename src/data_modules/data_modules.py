@@ -6,7 +6,7 @@ from torch.utils.data import BatchSampler, DataLoader, Dataset, Sampler, default
 from transformers import BatchEncoding
 
 from src.data_modules.datasets import TextClassificationDataset
-from src.data_modules.transformations import HuggingFaceTokenizationTransformation, Transformation
+from src.models.transformations import HuggingFaceTokenizationTransformation, Transformation
 
 
 class DataModule(LightningDataModule):

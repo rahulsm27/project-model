@@ -9,17 +9,17 @@ from torchmetrics.classification import BinaryAccuracy, BinaryConfusionMatrix, B
 from transformers import BatchEncoding
 
 from src.models.models import Model
-from src.data_modules.transformations import Transformation
+from src.models.transformations import Transformation
 from src.training.lightning_modules.bases import (
     TrainingLightningModule,
-    PartialOptimizerType,
+    PartialOptimizerType, ModelStateDictExportingTrainingLightningModule
 )
 from src.training.loss_functions import LossFunction
 from src.training.schedulers import LightningScheduler
 from src.utils.torch_utils import plot_confusion_matrix
 
 
-class BinaryTextClassificationTrainingLightningModule(TrainingLightningModule):
+class BinaryTextClassificationTrainingLightningModule(ModelStateDictExportingTrainingLightningModule):
     def __init__(
         self,
         model: Model,

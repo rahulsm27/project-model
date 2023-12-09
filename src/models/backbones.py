@@ -3,7 +3,7 @@ from torch import nn
 from transformers import AutoConfig, AutoModel , BatchEncoding
 from transformers.modeling_outputs import BaseModelOutputWithPooling
 from src.utils.io_utils import translate_gcs_dir_to_local
-from src.data_modules.transformations import Transformation
+from src.models.transformations import Transformation
 
 
 class Backbone(nn.Module):

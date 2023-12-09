@@ -7,9 +7,13 @@ from torch.optim.lr_scheduler import _LRScheduler
 
 from src.training.loss_functions import LossFunction
 from src.training.schedulers import LightningScheduler
-
+from src.models.transformations import Transformation
 from src.models.models import Model
 from src.utils.utils import get_logger
+from src.utils.io_utils import open_file
+
+import os
+import torch
 
 PartialOptimizerType = Callable[[Union[Iterable[Tensor], dict[str, Iterable[Tensor]]]], Optimizer]
 
@@ -50,5 +54,40 @@ class TrainingLightningModule(LightningModule):
     @abstractmethod
     def validation_step(self,batch: Any, batch_idx: int)-> Tensor:
         ...
+
+    @abstractmethod
+    def get_transformation(self) -> Transformation:
+       ...
+
+
     
-    
+class ModelStateDictExportingTrainingLightningModule(TrainingLightningModule):
+    @abstractmethod
+    def export_model_state_dict(self, checkpoint_path: str) -> str:
+        """
+        Export model state dict from LightningModule checkpoint and save it
+        to the same location as the checkpoint_path, and return the save path
+        """
+
+    def common_export_model_state_dict(self, checkpoint_path: str) -> str:
+        with open_file(checkpoint_path, "rb") as f:
+            state_dict = torch.load(f, map_location=torch.device("cpu"))["state_dict"]
+
+        #not exporting loss value
+        model_state_dict = {}
+        for key, value in state_dict.items():
+            if not key.startswith("loss."):
+                model_state_dict[key.replace("model.", "", 1)] = value
+        """
+        we remove model. prefex
+        {model.linear. : model parameters}
+        
+        """
+            
+
+        model_state_dict_save_path = os.path.join(os.path.dirname(checkpoint_path), "model_state_dict.pth")
+
+        with open_file(model_state_dict_save_path, "wb") as f:
+            torch.save(model_state_dict, f)
+
+        return model_state_dict_save_path
