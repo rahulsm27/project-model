@@ -10,8 +10,8 @@ from hydra.utils import instantiate
 # custom decorater created
 @get_config(config_path="../configs/automatically_generated", config_name="config", to_object=False ,return_dict_config=True)
 def run_tasks(config: Config) -> None:
-   # print(OmegaConf.to_yaml(config,resolve=True))
-   # exit()
+    print(OmegaConf.to_yaml(config,resolve=True))
+    exit()
     logger = get_logger(__file__)
     assert config.infrastructure.mlflow.run_id is not None, "Run id has to be set for running tasks"
 

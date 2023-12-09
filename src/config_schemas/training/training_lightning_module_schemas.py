@@ -40,6 +40,10 @@ class DefaultBinaryTextClassificationTrainingLightningModuleConfig(
     ] = scheduler_schemas.ReduceLROnPlateauLightningSchedulerConfig()
 
 
+
+
+
+
 def setup_config() -> None:
     cs = ConfigStore.instance()
     cs.store(

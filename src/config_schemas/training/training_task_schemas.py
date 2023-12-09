@@ -15,9 +15,9 @@ class TrainingTaskConfig(TaskConfig):
     last_training_checkpoint: str = SI("${infrastructure.mlflow.artifact_uri}/last-checkpoints/last.ckpt")
 
 
-# @dataclass
-# class TarModelExportingTrainingTaskConfig(TrainingTaskConfig):
-#     tar_model_export_path: str = SI("${infrastructure.mlflow.artifact_uri}/exported_model.tar.gz")
+@dataclass
+class TarModelExportingTrainingTaskConfig(TrainingTaskConfig):
+    tar_model_export_path: str = SI("${infrastructure.mlflow.artifact_uri}/exported_model.tar.gz")
 
 
 @dataclass
@@ -26,7 +26,8 @@ class CommonTrainingTaskConfig(TrainingTaskConfig):
 
 
 @dataclass
-class DefaultCommonTrainingTaskConfig(CommonTrainingTaskConfig):
+class DefaultCommonTrainingTaskConfig(TarModelExportingTrainingTaskConfig):
+    _target_ :str = "src.training.tasks.tar_model_exporting_training_task.TarModelExportingTrainingTask"
     name : str = "BinaryTextClassification"
 
     data_module: data_module_schemas.DataModuleConfig = (
@@ -36,7 +37,7 @@ class DefaultCommonTrainingTaskConfig(CommonTrainingTaskConfig):
         training_lightning_module_schemas.DefaultBinaryTextClassificationTrainingLightningModuleConfig()
     )
     trainer: trainer_schemas.TrainerConfig = trainer_schemas.GPUDev()
-
+    tar_model_export_path : str = SI("${infrastructure.mlflow.artifact_uri}/exported_model.tar.gz")
 
 def setup_config() -> None:
     data_module_schemas.setup_config()
