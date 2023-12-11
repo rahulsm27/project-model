@@ -2,7 +2,7 @@
 IS_PROD_ENV=true
 
 GOOGLE_CLOUD_PROJECT=mlendtoend
-MLFLOW_INTERNAL_TRACKING_URI=http://project-mlflow.c.${GOOGLE_CLOUD_PROJECT}.internal:${PROD_MLFLOW_SERVER_PORT}
+MLFLOW_INTERNAL_TRACKING_URI=http://project-mlflow.europe-west4-a.c.${GOOGLE_CLOUD_PROJECT}.internal:${PROD_MLFLOW_SERVER_PORT}
 #VMINSTANCE.C.GCP project id.internal 
 # used on gcp by vm isntance.
 

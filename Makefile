@@ -1,6 +1,7 @@
 include .envs/.postgres
 include .envs/.mlflow-common 
 include .envs/.mlflow-dev 
+include .envs/.infrastructure
 export
 
 
@@ -115,6 +116,7 @@ build-for-dependencies:
 lock-dependencies: build-for-dependencies
 	$(DOCKER_COMPOSE_RUN) bash -c "if [ -e /home/${USER_NAME}/poetry.lock.build ]; then cp /home/${USER_NAME}/poetry.lock.build ./poetry.lock; else poetry lock; fi"
 
+
 ## Starts docker containers using "docker-compose up -d"
  # check if the container name is same as current running. if not down it..requrired if we want to switch between dev and prod services
 up:
@@ -132,6 +134,11 @@ exec-in: up
 	docker exec -it $(CONTAINER_NAME) bash
 
 .DEFAULT_GOAL := help
+
+
+## Run ssh tunnel for MLFlow
+mlflow-tunnel:
+	gcloud compute ssh "$${VM_NAME}" --zone "$${ZONE}" --tunnel-through-iap -- -N -L "$${PROD_MLFLOW_SERVER_PORT}:localhost:$${PROD_MLFLOW_SERVER_PORT}"
 
 # Inspired by <http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html>
 # sed script explained:
