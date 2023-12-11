@@ -30,7 +30,7 @@ FinalLocalBertExperiment = OmegaConf.merge(
     LocalBertExperiment,
     OmegaConf.from_dotlist(
         [
-            "infrastructure.mlflow.experiment_name=cybulde",
+            "infrastructure.mlflow.experiment_name=project",
             "tasks.binary_text_classification_task.data_module.batch_size=1024",
             "tasks.binary_text_evaluation_task.tar_model_path=${tasks.binary_text_classification_task.tar_model_export_path}",
             "tasks.binary_text_evaluation_task.data_module=${tasks.binary_text_classification_task.data_module}",

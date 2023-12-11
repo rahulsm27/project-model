@@ -58,14 +58,14 @@ guard-%:
 	@#$(or ${$*}, $(error $* is not set))
 
 generate-final-config : up-prod
-	@$(DOCKER_COMPOSE_EXEC) python src/generate_final_config.py docker_image=${GCP_DOCKER_REGISTRY_URL}:${IMAGE_TAG} ${OVERRIDES}
-
+	@$(DOCKER_COMPOSE_EXEC_PROD) python src/generate_final_config.py docker_image=${GCP_DOCKER_REGISTRY_URL}:${IMAGE_TAG} ${OVERRIDES}
+#infrastructure.instance_group_creator.instance_template_creator.vm_metadata_config
 generate-final-config-local: up
 	@$(DOCKER_COMPOSE_EXEC) python src/generate_final_config.py ${OVERRIDES}
 	#@ runs in current directory
 
 
-run-tasks : generate_final_config push
+run-tasks : generate-final-config push
 	$(DOCKER_COMPOSE_EXEC) python src/lanuch_jog_on_gcp.py
 ## Call entrypoint
 local-run-tasks: generate-final-config-local

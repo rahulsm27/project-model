@@ -2,8 +2,9 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from omegaconf import SI
+from typing import Optional
 
-from instance_template_creator import VMType
+from src.infrastructure.instance_template_creator import VMType
 
 
 @dataclass
@@ -26,7 +27,7 @@ class VMConfig:
 @dataclass
 class VMMetadataConfig:
     instance_group_name: str = SI("${infrastructure.instance_group_creator.name}")
-    docker_image : str = SI("${docker_image}")
+    docker_image : Optional[str] = SI("${docker_image}")
     zone: str = SI("${infrastructure.zone}")
     python_hash_seed: int = 42
     mlflow_trackin_urs : str = SI("${infrastructure.mlflow.mlflow_internal_tracking_uri}")
@@ -46,9 +47,10 @@ class InstanceTemplateCreatorConfig:
         ]
     )
     network: str = SI("https://www.googleapis.com/compute/v1/projects/${.project_id}/global/networks/default")
-    subnetwork: str = SI(
-        "https://www.googleapis.com/compute/v1/projects/${.project_id}/regions/${infrastructure.region}/subnetworks/default"
-    )
+    subnetwork: str = "https://www.googleapis.com/compute/v1/projects/cybulde/regions/europe-west4/subnetworks/default"
+#    SI(
+#        "https://www.googleapis.com/compute/v1/projects/${.project_id}/regions/${infrastructure.region}/subnetworks/default"
+#    )
     startup_script_path: str = "scripts/task_runner_startup_script.sh"
     vm_config: VMConfig = VMConfig()
     boot_disk_config: BootDiskConfig = BootDiskConfig()

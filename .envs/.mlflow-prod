@@ -2,7 +2,7 @@
 IS_PROD_ENV=true
 
 GOOGLE_CLOUD_PROJECT=mlendtoend
-MLFLOW_INTERNAL_TRACKING_URI=http://project-mlflow.europe-west4-a.c.${GOOGLE_CLOUD_PROJECT}.internal:${PROD_MLFLOW_SERVER_PORT}
+MLFLOW_INTERNAL_TRACKING_URI= http://project-mlflow.europe-west4-a.c.${GOOGLE_CLOUD_PROJECT}.internal:${PROD_MLFLOW_SERVER_PORT}
 #VMINSTANCE.C.GCP project id.internal 
 # used on gcp by vm isntance.
 
@@ -13,8 +13,8 @@ MLFLOW_TRACKING_URI=http://localhost:${PROD_MLFLOW_SERVER_PORT}
 #Before we launch distributed on GCP
 
 
-MLFLOW_BACKEND_STORE=postgresql://${POSTGRES_USE}:${POSTGRES_PASSWORD}@mlflow-backend-store/${POSTGRES_DB}
+MLFLOW_BACKEND_STORE=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@mlflow-backend-store/${POSTGRES_DB}
 
-MLFLOW_ARTIFACT_STORE=/mlflow-artifiact-store 
+MLFLOW_ARTIFACT_STORE=/mlflow 
 
 

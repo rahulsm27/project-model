@@ -1,7 +1,8 @@
 from pathlib import Path
 from enum import Enum
 from dataclasses import dataclass
-from utils import get_logger,wait_for_extended_operation
+from src.utils.gcp_utils import wait_for_extended_operation
+from src.utils.utils import get_logger
 from google.cloud import compute_v1
 class VMType(Enum):
     STANDARD = "STANDARD"

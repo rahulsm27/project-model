@@ -66,9 +66,6 @@ services:
   app-prod: # for distributed processing on cloud
     <<: *APP_TEMPLATE
     container_name : project-model-prod-container
-    
-      - 8080:8080
-      - ${LOCAL_DEV_MLFLOW_SERVER_PORT}:${LOCAL_DEV_MLFLOW_SERVER_PORT}
     env_file:
       - .envs/.mlflow-common
       - .envs/.mlflow-prod
