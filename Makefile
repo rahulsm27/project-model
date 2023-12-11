@@ -23,7 +23,7 @@ endif
 
 PROD_SERVICE_NAME = app-prod
 PROD_CONTAINER_NAME = project-model-prod-container
-
+PROD_PROFILE_NAME = prod
 # ifeq (, $(shell which nvidia-smi)) # check if gpu is available or not
 # 	PROFILE = ci 
 # 	CONTAINER_NAME = src-model-ci-container
@@ -50,18 +50,25 @@ DOCKER_COMPOSE_RUN_PROD = $(DOCKER_COMPOSE_COMMAND) run --rm $(PROD_SERVICE_NAME
 
 DOCKER_COMPOSE_EXEC_PROD = $(DOCKER_COMPOSE_COMMAND) exec $(PROD_SERVICE_NAME)
 
-
+IMAGE_TAG := $(shell echo "train-$$(uuidgen)")
 export
 
 # Returns true if the stem is a non-empty environment variable, or else raises an error.
 guard-%:
 	@#$(or ${$*}, $(error $* is not set))
 
-generate_final_config_local: up
+generate-final-config : up-prod
+	@$(DOCKER_COMPOSE_EXEC) python src/generate_final_config.py docker_image=${GCP_DOCKER_REGISTRY_URL}:${IMAGE_TAG} ${OVERRIDES}
+
+generate-final-config-local: up
 	@$(DOCKER_COMPOSE_EXEC) python src/generate_final_config.py ${OVERRIDES}
 	#@ runs in current directory
+
+
+run-tasks : generate_final_config push
+	$(DOCKER_COMPOSE_EXEC) python src/lanuch_jog_on_gcp.py
 ## Call entrypoint
-local-run-tasks: generate_final_config_local
+local-run-tasks: generate-final-config-local
 	$(DOCKER_COMPOSE_EXEC) torchrun ./src/run_tasks.py
 
 ## Starts jupyter lab
@@ -117,6 +124,13 @@ lock-dependencies: build-for-dependencies
 	$(DOCKER_COMPOSE_RUN) bash -c "if [ -e /home/${USER_NAME}/poetry.lock.build ]; then cp /home/${USER_NAME}/poetry.lock.build ./poetry.lock; else poetry lock; fi"
 
 
+up-prod:
+ifeq (, $(shell docker ps -a | grep $(PROD_CONTAINER_NAME)))
+	@make down
+endif
+	$(DOCKER_COMPOSE_COMMAND) --profile $(PROD_PROFILE_NAME) up -d --remove-orphans
+
+
 ## Starts docker containers using "docker-compose up -d"
  # check if the container name is same as current running. if not down it..requrired if we want to switch between dev and prod services
 up:
@@ -124,6 +138,8 @@ ifeq (, $(shell docker ps -a | grep $(CONTAINER_NAME)))
 	@make down
 endif
 	$(DOCKER_COMPOSE_COMMAND) --profile $(PROFILE) up -d --remove-orphans
+
+
 
 ## docker-compose down
 down:
@@ -135,6 +151,10 @@ exec-in: up
 
 .DEFAULT_GOAL := help
 
+push: guard-IMAGE_TAG build
+	@gcloud auth configure-docker --quiet europe-west4-docker.pkg.dev
+	@docker tag "$${DOCKER_IMAGE_NAME}:latest" "$${GCP_DOCKER_REGISTRY_URL}:$${IMAGE_TAG}"
+	@docker push "$${GCP_DOCKER_REGISTRY_URL}:$${IMAGE_TAG}"
 
 ## Run ssh tunnel for MLFlow
 mlflow-tunnel:

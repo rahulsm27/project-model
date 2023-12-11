@@ -4,7 +4,7 @@ from typing import Optional
 from hydra.core.config_store import ConfigStore
 from omegaconf import SI
 
-#from src.config_schemas.infrastructure.instance_group_creator_schemas import InstanceGroupCreatorConfig
+from src.config_schemas.infrastructure.instance_group_creator_schemas import InstanceGroupCreatorConfig
 
 
 @dataclass
@@ -23,7 +23,7 @@ class MLFlowConfig:
 class InfrastructureConfig:
     project_id: str = "mlendtoend"
     zone: str = "europe-west4-b"
-  #  instance_group_creator: InstanceGroupCreatorConfig = InstanceGroupCreatorConfig()
+    instance_group_creator: InstanceGroupCreatorConfig = InstanceGroupCreatorConfig()
     mlflow: MLFlowConfig = MLFlowConfig()
     etcd_ip: Optional[str] = "10.164.0.12:2379"
 
