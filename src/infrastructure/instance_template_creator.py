@@ -130,7 +130,7 @@ class InstanceTemplateCreator:
         self.template.properties.machine_type = self.vm_config.machine_type
         if self.vm_config.accelerator_count > 0:
             self.template.properties.guest_accelerators = [
-                compute_v1.AccleratorConfig(
+                compute_v1.AcceleratorConfig(
                     accelerator_type = self.vm_config.accelerator_type,
                     accelerator_count = self.vm_config.accelerator_count
                 )
@@ -140,7 +140,7 @@ class InstanceTemplateCreator:
 
         self.template.properties.labels = self.labels
 
-        vm_type = self.vm_config.vm_type
+        vm_type = VMType(self.vm_config.vm_type)
         if vm_type == VMType.PREEMPTIBLE:
             self.logger.info("Using PREEMPTIBLE machine")
             self.template.properties.scheduling = compute_v1.Scheduling(preemptible=True)

@@ -10,7 +10,7 @@ from src.infrastructure.instance_template_creator import VMType
 @dataclass
 class BootDiskConfig:
     project_id: str = "deeplearning-platform-release"
-    name: str = "common-cu113-v202309025" #cuda image
+    name: str = "common-cu113-v20230925" #cuda image
     size_gb: int = 50
     labels: Any = SI("${..labels}")
 
@@ -46,12 +46,12 @@ class InstanceTemplateCreatorConfig:
             "https://www.googleapis.com/auth/cloudruntimeconfig",
         ]
     )
-    network: str = SI("https://www.googleapis.com/compute/v1/projects/${.project_id}/global/networks/default")
-    subnetwork: str = "https://www.googleapis.com/compute/v1/projects/cybulde/regions/europe-west4/subnetworks/default"
+    network: str = SI("https://www.googleapis.com/compute/v1/projects/mlendtoend/global/networks/default")
+    subnetwork: str = "https://www.googleapis.com/compute/v1/projects/mlendtoend/regions/europe-west4/subnetworks/default"
 #    SI(
 #        "https://www.googleapis.com/compute/v1/projects/${.project_id}/regions/${infrastructure.region}/subnetworks/default"
 #    )
-    startup_script_path: str = "scripts/task_runner_startup_script.sh"
+    startup_script_path: str = "scripts/vm_startup/task_runner_startup_script.sh"
     vm_config: VMConfig = VMConfig()
     boot_disk_config: BootDiskConfig = BootDiskConfig()
     vm_metadata_config: VMMetadataConfig = VMMetadataConfig()

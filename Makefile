@@ -147,7 +147,7 @@ down:
 	$(DOCKER_COMPOSE_COMMAND) down
 
 ## Open an interactive shell in docker container
-exec-in: up
+exec-in: up-prod
 	docker exec -it $(CONTAINER_NAME) bash
 
 .DEFAULT_GOAL := help

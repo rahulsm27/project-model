@@ -24,8 +24,8 @@ infrastructure:
       - https://www.googleapis.com/auth/cloud.useraccounts.readonly
       - https://www.googleapis.com/auth/cloudruntimeconfig
       network: https://www.googleapis.com/compute/v1/projects/mlendtoend/global/networks/default
-      subnetwork: https://www.googleapis.com/compute/v1/projects/cybulde/regions/europe-west4/subnetworks/default
-      startup_script_path: scripts/task_runner_startup_script.sh
+      subnetwork: https://www.googleapis.com/compute/v1/projects/mlendtoend/regions/europe-west4/subnetworks/default
+      startup_script_path: scripts/vm_startup/task_runner_startup_script.sh
       vm_config:
         machine_type: n1-standard-8
         accelerator_count: 1
@@ -33,24 +33,24 @@ infrastructure:
         vm_type: STANDARD
         disks: []
       boot_disk_config:
-        project_id: ubuntu-os-cloud
-        name: common-cu113-v202309025
+        project_id: deeplearning-platform-release
+        name: common-cu113-v20230925
         size_gb: 50
         labels:
           project: my-project-name
       vm_metadata_config:
-        instance_group_name: job-20231212081756
-        docker_image: europe-west4-docker.pkg.dev/mlendtoend/mlflow/project-model:train-94F05F9A-0EB1-4DC0-8E76-79E5E0BDE296
+        instance_group_name: job-20231212103642
+        docker_image: europe-west4-docker.pkg.dev/mlendtoend/mlflow/project-model:train-0BED4003-F739-4717-8FFC-EEB66E1FB596
         zone: europe-west4-b
         python_hash_seed: 42
         mlflow_trackin_uri: http://project-mlflow.europe-west4-a.c.mlendtoend.internal:6100
         node_count: 1
         disks: []
-      template_name: job-20231212081756
+      template_name: job-20231212103642
       project_id: mlendtoend
       labels:
         project: my-project-name
-    name: job-20231212081756
+    name: job-20231212103642
     node_count: 1
     project_id: mlendtoend
     zone: europe-west4-b
@@ -59,10 +59,10 @@ infrastructure:
     mlflow_internal_tracking_uri: http://project-mlflow.europe-west4-a.c.mlendtoend.internal:6100
     experiment_name: project
     run_name: null
-    run_id: a6f554f8fdc0406ba02249aa33fde07a
+    run_id: d664d4168e554c5fae9ef03c77b4bfdb
     experiment_id: '595100686959086787'
-    experiment_url: http://localhost:6100/#/experiments/595100686959086787/runs/a6f554f8fdc0406ba02249aa33fde07a
-    artifact_uri: gs://mflow/595100686959086787/a6f554f8fdc0406ba02249aa33fde07a/artifacts
+    experiment_url: http://localhost:6100/#/experiments/595100686959086787/runs/d664d4168e554c5fae9ef03c77b4bfdb
+    artifact_uri: gs://mflow/595100686959086787/d664d4168e554c5fae9ef03c77b4bfdb/artifacts
   etcd_ip: 10.164.0.12:2379
 save_last_checkpoint_every_n_train_steps: 500
 seed: 1234
@@ -166,10 +166,10 @@ tasks:
         save_dir: null
         prefix: ''
         artifact_location: null
-        run_id: a6f554f8fdc0406ba02249aa33fde07a
+        run_id: d664d4168e554c5fae9ef03c77b4bfdb
       callbacks:
       - _target_: lightning.pytorch.callbacks.ModelCheckpoint
-        dirpath: gs://mflow/595100686959086787/a6f554f8fdc0406ba02249aa33fde07a/artifacts/best-checkpoints/
+        dirpath: gs://mflow/595100686959086787/d664d4168e554c5fae9ef03c77b4bfdb/artifacts/best-checkpoints/
         filename: null
         monitor: validation_f1_score
         verbose: false
@@ -183,7 +183,7 @@ tasks:
         every_n_epochs: null
         save_on_train_epoch_end: null
       - _target_: lightning.pytorch.callbacks.ModelCheckpoint
-        dirpath: gs://mflow/595100686959086787/a6f554f8fdc0406ba02249aa33fde07a/artifacts/last-checkpoints/
+        dirpath: gs://mflow/595100686959086787/d664d4168e554c5fae9ef03c77b4bfdb/artifacts/last-checkpoints/
         filename: checkpoint-{epoch}
         monitor: null
         verbose: false
@@ -228,9 +228,9 @@ tasks:
       sync_batchnorm: true
       reload_dataloaders_every_n_epochs: 0
       default_root_dir: ./data/pytorch-lightning
-    best_training_checkpoint: gs://mflow/595100686959086787/a6f554f8fdc0406ba02249aa33fde07a/artifacts/best-checkpoints/last.ckpt
-    last_training_checkpoint: gs://mflow/595100686959086787/a6f554f8fdc0406ba02249aa33fde07a/artifacts/last-checkpoints/last.ckpt
-    tar_model_export_path: gs://mflow/595100686959086787/a6f554f8fdc0406ba02249aa33fde07a/artifacts/exported_model.tar.gz
+    best_training_checkpoint: gs://mflow/595100686959086787/d664d4168e554c5fae9ef03c77b4bfdb/artifacts/best-checkpoints/last.ckpt
+    last_training_checkpoint: gs://mflow/595100686959086787/d664d4168e554c5fae9ef03c77b4bfdb/artifacts/last-checkpoints/last.ckpt
+    tar_model_export_path: gs://mflow/595100686959086787/d664d4168e554c5fae9ef03c77b4bfdb/artifacts/exported_model.tar.gz
   binary_text_evaluation_task:
     _target_: src.evaluation.tasks.common_evaluation_task.CommonEvaluationTask
     name: binary_text_evaluation_task
@@ -270,10 +270,10 @@ tasks:
         save_dir: null
         prefix: ''
         artifact_location: null
-        run_id: a6f554f8fdc0406ba02249aa33fde07a
+        run_id: d664d4168e554c5fae9ef03c77b4bfdb
       callbacks:
       - _target_: lightning.pytorch.callbacks.ModelCheckpoint
-        dirpath: gs://mflow/595100686959086787/a6f554f8fdc0406ba02249aa33fde07a/artifacts/best-checkpoints/
+        dirpath: gs://mflow/595100686959086787/d664d4168e554c5fae9ef03c77b4bfdb/artifacts/best-checkpoints/
         filename: null
         monitor: validation_f1_score
         verbose: false
@@ -287,7 +287,7 @@ tasks:
         every_n_epochs: null
         save_on_train_epoch_end: null
       - _target_: lightning.pytorch.callbacks.ModelCheckpoint
-        dirpath: gs://mflow/595100686959086787/a6f554f8fdc0406ba02249aa33fde07a/artifacts/last-checkpoints/
+        dirpath: gs://mflow/595100686959086787/d664d4168e554c5fae9ef03c77b4bfdb/artifacts/last-checkpoints/
         filename: checkpoint-{epoch}
         monitor: null
         verbose: false
@@ -332,10 +332,10 @@ tasks:
       sync_batchnorm: true
       reload_dataloaders_every_n_epochs: 0
       default_root_dir: ./data/pytorch-lightning
-    tar_model_path: gs://mflow/595100686959086787/a6f554f8fdc0406ba02249aa33fde07a/artifacts/exported_model.tar.gz
+    tar_model_path: gs://mflow/595100686959086787/d664d4168e554c5fae9ef03c77b4bfdb/artifacts/exported_model.tar.gz
 model_selector:
   _target_: src.evaluation.model_selector.ModelSelector
-  mlflow_run_id: a6f554f8fdc0406ba02249aa33fde07a
+  mlflow_run_id: d664d4168e554c5fae9ef03c77b4bfdb
   must_be_better_metric_comparers:
     f1_score:
       _target_: src.evaluation.model_selector.MetricComparer
@@ -352,4 +352,4 @@ model_selector:
   to_be_thresholded_metric_comparers: {}
   threshold: 0.0
 registered_model_name: bert_tiny
-docker_image: europe-west4-docker.pkg.dev/mlendtoend/mlflow/project-model:train-94F05F9A-0EB1-4DC0-8E76-79E5E0BDE296
+docker_image: europe-west4-docker.pkg.dev/mlendtoend/mlflow/project-model:train-0BED4003-F739-4717-8FFC-EEB66E1FB596
