@@ -48,16 +48,16 @@ INSTANCE_GROUP_NAME=$(echo ${INSTANCE_GROUP_NAME} | tr '[:upper:]' '[:lower:]')
 echo -e "TRAINING: instance group name: ${INSTANCE_GROUP_NAME}, docker image: ${DOCKER_IMAGE}, node count: ${NODE_COUNT}, python hash seed: ${PYTHON_HASH_SEED}"
 
 echo "============= Installing Nvidia Drivers ==============="
-apt-get update && /opt/deeplearning/install-driver.sh
+apt-get update && sudo /opt/deeplearning/install-driver.sh
 
 echo "============= Downloading docker image ==============="
 gcloud auth configure-docker --quiet europe-west4-docker.pkg.dev
-time docker pull "${DOCKER_IMAGE}"
+time sudo docker pull "${DOCKER_IMAGE}"
 
 echo "============= TRAINING: start ==============="
 
 if [ "${ETCD_IP}" = "None" ]; then
-	docker run --init --rm --gpus all --ipc host --user root --hostname "$(hostname)" --privileged \
+	sudo docker run --init --rm --gpus all --ipc host --user root --hostname "$(hostname)" --privileged \
 		--log-driver=gcplogs \
 		-e PYTHONHASHSEED="${PYTHON_HASH_SEED}" \
 		-e MLFLOW_TRACKING_URI="${MLFLOW_TRACKING_URI}" \
@@ -68,7 +68,7 @@ if [ "${ETCD_IP}" = "None" ]; then
 		--nproc_per_node='gpu' \
 		src/run_tasks.py || echo '================ TRAINING: job failed ==============='
 else
-	docker run --init --rm --gpus all --ipc host --user root --hostname "$(hostname)" --privileged \
+	sudo docker run --init --rm --gpus all --ipc host --user root --hostname "$(hostname)" --privileged \
 		--log-driver=gcplogs \
 		-e PYTHONHASHSEED="${PYTHON_HASH_SEED}" \
 		-e MLFLOW_TRACKING_URI="${MLFLOW_TRACKING_URI}" \
@@ -85,4 +85,4 @@ else
 fi
 
 echo "============= Cleaning up ==============="
-gcloud compute instance-groups managed delete --quiet "${INSTANCE_GROUP_NAME}" --zone "${ZONE}"
+#gcloud compute instance-groups managed delete --quiet "${INSTANCE_GROUP_NAME}" --zone "${ZONE}"
