@@ -24,9 +24,13 @@ def activate_mlflow(
     run_id: Optional[str] = None,
     run_name: Optional[str] = None,
 ) -> Iterable[mlflow.ActiveRun]:
-    set_experiment(experiment_name)
-
+    #print("I am here")
     run: ActiveRun
+   # print(run_id)
+    set_experiment(experiment_name)
+   
+
+    
     with mlflow.start_run(run_name=run_name, run_id=run_id) as run:
         yield run
 
@@ -38,6 +42,7 @@ def set_experiment(experiment_name: Optional[str] = None) -> None:
     try:
         mlflow.create_experiment(experiment_name)
     except mlflow.exceptions.RestException:
+       # print("error++++++++++")
         pass
 
     mlflow.set_experiment(experiment_name)

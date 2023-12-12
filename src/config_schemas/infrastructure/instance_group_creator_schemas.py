@@ -9,7 +9,7 @@ from src.config_schemas.infrastructure.instance_template_creator_schemas import 
 
 @dataclass
 class InstanceGroupCreatorConfig:
-    _target_: str = "instance_group_creator.InstanceGroupCreator"
+    _target_: str = "src.infrastructure.instance_group_creator.InstanceGroupCreator"
     instance_template_creator: InstanceTemplateCreatorConfig = InstanceTemplateCreatorConfig()
     name: str = SI("job-${now:%Y%m%d%H%M%S}")
     node_count: int = 1

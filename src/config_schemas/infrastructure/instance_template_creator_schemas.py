@@ -9,16 +9,16 @@ from src.infrastructure.instance_template_creator import VMType
 
 @dataclass
 class BootDiskConfig:
-    project_id: str = "ubuntu-os-cloud"
-    name: str = "ubuntu-2204-jammy-v20230714"
+    project_id: str = "deeplearning-platform-release"
+    name: str = "common-cu113-v202309025" #cuda image
     size_gb: int = 50
     labels: Any = SI("${..labels}")
 
 
 @dataclass
 class VMConfig:
-    machine_type: str = "n1-standard-1"
-    accelerator_count: int = 0
+    machine_type: str = "n1-standard-8"
+    accelerator_count: int = 1
     accelerator_type: str = "nvidia-tesla-t4"
     vm_type: VMType = VMType.STANDARD
     disks: list[str] = field(default_factory=lambda: [])
@@ -30,7 +30,7 @@ class VMMetadataConfig:
     docker_image : Optional[str] = SI("${docker_image}")
     zone: str = SI("${infrastructure.zone}")
     python_hash_seed: int = 42
-    mlflow_trackin_urs : str = SI("${infrastructure.mlflow.mlflow_internal_tracking_uri}")
+    mlflow_trackin_uri : str = SI("${infrastructure.mlflow.mlflow_internal_tracking_uri}")
     node_count: int = SI("${infrastructure.instance_group_creator.node_count}")
     disks: list[str] = SI("${..vm_config.disks}")
 
@@ -38,7 +38,7 @@ class VMMetadataConfig:
 # Above has some default values and some values to be fetched
 @dataclass
 class InstanceTemplateCreatorConfig:
-    _target_: str = "instance_template_creator.InstanceTemplateCreator"
+    _target_: str = "src.infrastructure.instance_template_creator.InstanceTemplateCreator"
     scopes: list[str] = field(
         default_factory=lambda: [
             "https://www.googleapis.com/auth/cloud-platform",

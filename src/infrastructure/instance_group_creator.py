@@ -2,8 +2,10 @@ import time
 
 from google.cloud import compute_v1
 
-from instance_template_creator import InstanceTemplateCreator
-from utils import get_logger, wait_for_extended_operation
+from src.infrastructure.instance_template_creator import InstanceTemplateCreator
+from src.utils.gcp_utils import wait_for_extended_operation
+from src.utils.utils import get_logger
+
 
 
 class InstanceGroupCreator:

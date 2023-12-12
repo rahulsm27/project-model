@@ -1,8 +1,4 @@
-#to start docker deamon
-#open -a Docker
-
-version: '3.11'
-#sudo docker-compose build
+version: '3.8'
 
 volumes:
   postgresql-mlflow-data:
@@ -26,7 +22,7 @@ x-app-template: &APP_TEMPLATE  # variable should start with x
     volumes : 
       - ./:/app/
       - mlflow-artifact-store:/mlflow-artifact-store
-      - ~/.config/gcloud:/home/${USER_NAME}/.config/gcloud
+      - ~/.config/gcloud/:/home/${USER_NAME}/.config/gcloud
     ipc : host
     init : true
 
@@ -69,8 +65,7 @@ services:
     env_file:
       - .envs/.mlflow-common
       - .envs/.mlflow-prod
-      - .envs/.infrastructure
-      
+      - .envs/.infrastructure  
     ports :
       - ${PROD_MLFLOW_SERVER_PORT}:${PROD_MLFLOW_SERVER_PORT}
     profiles:

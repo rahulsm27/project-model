@@ -10,7 +10,8 @@ if TYPE_CHECKING:
 # Yes, you are right, this is a little bit confusing. This is because of the way Hydra works. We are using their decorator in our decorator to read the config file. And their decorator works with relative path to where it was defined. Because we are using Hydra's decorator under utils module, the relative path to the config's directory is ../configs
 @get_config_and_dict_config(config_path="../configs", config_name="config" )
 def generate_final_config(config : "Config",dict_config : DictConfig) -> None:
-    print(OmegaConf.to_yaml(config))
+   # print(OmegaConf.to_yaml(config))
+    run: mlflow.ActiveRun
     with activate_mlflow(config.infrastructure.mlflow.experiment_name ,run_id= config.infrastructure.mlflow.run_id,run_name=config.infrastructure.mlflow.run_name) as run:
         # getting mlflow paramters
         run_id : str = run.info.run_id

@@ -1,6 +1,7 @@
 include .envs/.postgres
 include .envs/.mlflow-common 
 include .envs/.mlflow-dev 
+include .envs/.mlflow-prod
 include .envs/.infrastructure
 export
 
@@ -33,9 +34,9 @@ PROD_PROFILE_NAME = prod
 # 	CONTAINER_NAME = src-model-dev-container
 # 	SERVICE_NAME = app-dev 
 # endif
-PROFILE = dev
-CONTAINER_NAME = project-model-dev-container
-SERVICE_NAME = app-dev 
+# PROFILE = dev
+CONTAINER_NAME = project-model-prod-container
+SERVICE_NAME = app-prod 
 
 
 DIRS_TO_VALIDATE = src
@@ -66,7 +67,7 @@ generate-final-config-local: up
 
 
 run-tasks : generate-final-config push
-	$(DOCKER_COMPOSE_EXEC) python src/lanuch_jog_on_gcp.py
+	$(DOCKER_COMPOSE_EXEC) python src/launch_job_on_gcp.py
 ## Call entrypoint
 local-run-tasks: generate-final-config-local
 	$(DOCKER_COMPOSE_EXEC) torchrun ./src/run_tasks.py

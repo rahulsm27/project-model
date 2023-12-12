@@ -1,6 +1,6 @@
 
 
-IS_PROD_ENV=false
+#IS_PROD_ENV=false
 
 MLFLOW_BACKEND_STORE=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@mlflow-backend-store/${POSTGRES_DB}
 MLFLOW_ARTIFACT_STORE=/mlflow-artifact-store
