@@ -30,7 +30,7 @@ class VMMetadataConfig:
     docker_image : Optional[str] = SI("${docker_image}")
     zone: str = SI("${infrastructure.zone}")
     python_hash_seed: int = 42
-    mlflow_trackin_uri : str = SI("${infrastructure.mlflow.mlflow_internal_tracking_uri}")
+    mlflow_tracking_uri : str = SI("${infrastructure.mlflow.mlflow_internal_tracking_uri}")
     node_count: int = SI("${infrastructure.instance_group_creator.node_count}")
     disks: list[str] = SI("${..vm_config.disks}")
 

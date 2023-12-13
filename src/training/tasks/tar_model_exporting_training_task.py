@@ -46,7 +46,7 @@ class TarModelExportingTrainingTask(TrainingTask):
          #       log_training_hparams(config)
             assert isinstance(self.data_module, DataModule)
             if is_file(self.last_training_checkpoint):
-                self.logger.info("Found checkpoint her :{self.last_training_checkpoint}. Resume training..")
+                self.logger.info("Found checkpoint here :{self.last_training_checkpoint}. Resume training..")
                 self.trainer.fit(model=self.lightning_module, datamodule=self.data_module, ckpt_path = self.last_training_checkpoint)
             else:
                 self.logger.info("Starting fresh training")

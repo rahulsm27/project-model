@@ -33,3 +33,13 @@ This line imports the Optional and Any types from the typing module, allowing yo
 Optional: This is used to indicate that a variable or function argument can be either of a specified type or None. It is often used when a value is optional.
 
 Any: This is a special type that represents any value. It is used when the type of a variable or function argument can be of any type.
+
+
+
+sudo docker run --init --rm --gpus all --ipc host --user root --hostname Rahul --privileged --log-driver=gcplogs -e PYTHONHASHSEED=1234 -e MLFLOW_TRACKING_URI=http://project-mlflow.europe-west4-a.c.mlendtoend.internal:6100 -e TOKENIZERS_PARALLELISM=false europe-west4-docker.pkg.dev/mlendtoend/mlflow/project-model:train-B013AFA0-DB21-41CF-8F1A-F7FBC929DFF9 torchrun --nnodes=1 --nproc_per_node='gpu' src/run_tasks.py
+
+docker run --rm -it --gpus all europe-west4-docker.pkg.dev/mlendtoend/mlflow/project-model:train-B013AFA0-DB21-41CF-8F1A-F7FBC929DFF9 bash
+
+import torch
+torch.__version__
+torch.cuda.is_available()

@@ -25,7 +25,7 @@ class InfrastructureConfig:
     zone: str = "europe-west4-b"
     instance_group_creator: InstanceGroupCreatorConfig = InstanceGroupCreatorConfig()
     mlflow: MLFlowConfig = MLFlowConfig()
-    etcd_ip: Optional[str] = "10.164.0.12:2379"
+    etcd_ip: Optional[str] = None
    
 def setup_config() -> None:
     cs = ConfigStore.instance()

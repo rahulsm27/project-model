@@ -14,7 +14,7 @@ from src.models.common.io_utils import cache_gcs_resource_locally, copy_file
 from src.models.common.utils import get_global_rank, get_local_rank, global_rank_zero_first, local_rank_zero_first
 from src.utils.utils import get_logger
 
-MODELS_MODULE_PATH = "cybulde/models"
+MODELS_MODULE_PATH = "src/models"
 TEMP_MODELS_MODULE_PATH = "temp_module/models"
 MODEL_CONFIG_PATH = "model_config.yaml"
 STATE_DICT_PATH = "model_state_dict.pth"
@@ -67,7 +67,7 @@ class TarModelLoader:
         self.logger = get_logger(self.__class__.__name__)
 
     def load(self) -> Any:
-        temp_export_path = "/tmp/temp_cybulde"
+        temp_export_path = "/tmp/temp_src"
 
         with local_rank_zero_first():
             if get_local_rank() in [0, -1]:
