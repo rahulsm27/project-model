@@ -33,7 +33,7 @@ class VMMetadataConfig:
     mlflow_tracking_uri : str = SI("${infrastructure.mlflow.mlflow_internal_tracking_uri}")
     node_count: int = SI("${infrastructure.instance_group_creator.node_count}")
     disks: list[str] = SI("${..vm_config.disks}")
-
+    etcd_ip: Optional[str] = SI("${infrastructure.etcd_ip}")
 # here we creating a class of Instancetempalte creator config created in instance_tempalte_creator and passsing values to this class from above.
 # Above has some default values and some values to be fetched
 @dataclass

@@ -16,25 +16,44 @@ ETCD_IP=$(curl --silent http://metadata.google.internal/computeMetadata/v1/insta
 
 INSTANCE_GROUP_NAME=$(echo ${INSTANCE_GROUP_NAME} | tr '[:upper:]' '[:lower:]')
 
-echo -e "TRAINING: instance group name: ${INSTANCE_GROUP_NAME}, docker image: ${DOCKER_IMAGE}, node count: ${NODE_COUNT}, python hash seed: ${PYTHON_HASH_SEED}"
+echo -e "TRAINING: instance group name: ${INSTANCE_GROUP_NAME}, docker image: ${DOCKER_IMAGE}, node count: ${NODE_COUNT}, python hash seed: ${PYTHON_HASH_SEED}, ETCD_IP= ${ETCD_IP}"
 
 echo "============= Installing Nvidia Drivers ==============="
-sudo apt-get update && sudo /opt/deeplearning/install-driver.sh
 
-echo "============= Installing Docker ==============="
-
-
+sudo apt-get update & /opt/deeplearning/install-driver.sh
 
 echo "============= Downloading docker image ==============="
 gcloud auth configure-docker --quiet europe-west4-docker.pkg.dev
-time sudo docker pull "${DOCKER_IMAGE}"
+time docker pull "${DOCKER_IMAGE}"
 
 echo "============= TRAINING: start ==============="
 
+if [ "${ETCD_IP}" = "None" ]; then
+	docker run --init --rm --gpus all --ipc host --user root --hostname "$(hostname)" --privileged \
+		--log-driver=gcplogs \
+		-e PYTHONHASHSEED="${PYTHON_HASH_SEED}" \
+		-e MLFLOW_TRACKING_URI="${MLFLOW_TRACKING_URI}" \
+		-e TOKENIZERS_PARALLELISM=false \
+		${DOCKER_IMAGE} \
+		torchrun \
+		--nnodes="${NODE_COUNT}" \
+		--nproc_per_node='gpu' \
+		src/run_tasks.py || echo '================ TRAINING: job failed ==============='
+else
+	docker run --init --rm --gpus all --ipc host --user root --hostname "$(hostname)" --privileged \
+		--log-driver=gcplogs \
+		-e PYTHONHASHSEED="${PYTHON_HASH_SEED}" \
+		-e MLFLOW_TRACKING_URI="${MLFLOW_TRACKING_URI}" \
+		-e TOKENIZERS_PARALLELISM=false \
+		${DOCKER_IMAGE} \
+		torchrun \
+		--nnodes="${NODE_COUNT}" \
+		--nproc_per_node='gpu' \
+		--rdzv_id="${INSTANCE_GROUP_NAME}" \
+		--rdzv_backend=etcd-v2 \
+		--rdzv_endpoint="${ETCD_IP}" \
+		src/run_tasks.py || echo '================ TRAINING: job failed ==============='
 
-echo $${MLFLOW_TRACKING_URI} || echo'==FAILED1=='
-echo ${MLFLOW_TRACKING_URI} || echo'==FAILED2=='
-
-sudo docker run --init --rm --gpus all --ipc host --user root --hostname "$(hostname)" --privileged --log-driver=gcplogs -e PYTHONHASHSEED="${PYTHON_HASH_SEED}" -e MLFLOW_TRACKING_URI="${MLFLOW_TRACKING_URI}" -e TOKENIZERS_PARALLELISM=false ${DOCKER_IMAGE} torchrun --nnodes="${NODE_COUNT}" --nproc_per_node='gpu' src/run_tasks.py || echo '================ TRAINING: job failed ==============='
+fi
 
 echo "============= Cleaning up ==============="

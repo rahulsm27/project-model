@@ -36,10 +36,11 @@ Any: This is a special type that represents any value. It is used when the type 
 
 
 
-sudo docker run --init --rm --gpus all --ipc host --user root --hostname Rahul --privileged --log-driver=gcplogs -e PYTHONHASHSEED=1234 -e MLFLOW_TRACKING_URI=http://project-mlflow.europe-west4-a.c.mlendtoend.internal:6100 -e TOKENIZERS_PARALLELISM=false europe-west4-docker.pkg.dev/mlendtoend/mlflow/project-model:train-B013AFA0-DB21-41CF-8F1A-F7FBC929DFF9 torchrun --nnodes=1 --nproc_per_node='gpu' src/run_tasks.py
+sudo docker run --init --rm --gpus all --ipc host --user root --hostname Rahul --privileged --log-driver=gcplogs -e PYTHONHASHSEED=1234 -e MLFLOW_TRACKING_URI=http://mlendtoend-mlflow.europe-west4-a.c.mlendtoend.internal:6100 -e TOKENIZERS_PARALLELISM=false europe-west4-docker.pkg.dev/mlendtoend/mlflow/project-model:train-D1E09014-5D99-454F-A735-A58F5EBADC75 torchrun --nnodes=1 --nproc_per_node='gpu' src/run_tasks.py
 
 docker run --rm -it --gpus all europe-west4-docker.pkg.dev/mlendtoend/mlflow/project-model:train-B013AFA0-DB21-41CF-8F1A-F7FBC929DFF9 bash
 
 import torch
 torch.__version__
 torch.cuda.is_available()
+
