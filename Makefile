@@ -215,3 +215,15 @@ help:
 		printf "\n"; \
 	}' \
 	| more $(shell test $(shell uname) = Darwin && echo '--no-init --raw-control-chars')
+
+
+#In a Makefile, a single dollar sign $ is used for variable expansion and function call. It is an integral part of the syntax in mak
+# the double dollar sign ($$) is typically used for escaping a literal dollar sign when it needs to be passed to the shell command without being interpreted as a make variable.
+
+#bash
+
+#$variable or ${varaible}: Represents the value stored in the variable.
+
+#$(command) : Executes the command and substitutes its output.
+# current_date=$(date)
+# echo "Current date: $current_date"
