@@ -1,6 +1,7 @@
 # E2E ML project using MLflow, Pytorch Lightning, GCP cloud, Docker
 
-Project on Twitter Tweets sentiment analysis
+Project on Twitter Tweets sentiment analysis. The project uses BERT model to classify tweets as positve or negative. It uses distributed training using pytorch lightning framework on GCP instance.
+
 The project consists of three main parts
 
 1. Generate config file using src/generate_final_config.py. The config file contains parameters for the entire project and experiment tracking. The file is saved at
