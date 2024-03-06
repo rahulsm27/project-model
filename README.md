@@ -1,4 +1,4 @@
-# E2E Ml project using MLflow, Pytorch Lightning, GCP cloud, Docker
+# E2E ML project using MLflow, Pytorch Lightning, GCP cloud, Docker
 
 Project on Twitter Tweets sentiment analysis
 The project consists of three main parts
@@ -14,7 +14,7 @@ The project creates an instance group on the GCP cloud.
 The code has been written to read the data from GCP storage
 The code uses Pytorch lightning for distributed training
 It uses MLFlow for experiment tracking
-The config file is stored und
+The config file is stored under the configs->automatically_generated folder
 
 # Key Open source tools used
 
